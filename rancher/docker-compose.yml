@@ -1,0 +1,113 @@
+version: '2'
+volumes:
+  Nico-Pipeline-vfb_data:
+    external: true
+    driver: rancher-nfs
+services:
+  vfb-owlery:
+    image: virtualflybrain/owlery-vfb:latest
+    environment:
+      OWLURL: http://vfb-triplestore:8080/rdf4j-server/repositories/vfb?query=PREFIX+rdfs%3A+%3Chttp%3A%2F%2Fwww.w3.org%2F2000%2F01%2Frdf-schema%23%3E%0APREFIX+owl%3A+%3Chttp%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23%3E%0APREFIX+rdf%3A+%3Chttp%3A%2F%2Fwww.w3.org%2F1999%2F02%2F22-rdf-syntax-ns%23%3E%0APREFIX+obo%3A+%3Chttp%3A%2F%2Fpurl.obolibrary.org%2Fobo%2F%3E%0ACONSTRUCT+%7B%3Fx+%3Fy+%3Fz%7D%0AWHERE+%7B%0A%09%3Fx+%3Fy+%3Fz+.%0A%7D%0A
+    stdin_open: true
+    tty: true
+    links:
+    - vfb-triplestore:vfb-triplestore
+    labels:
+      io.rancher.container.pull_image: always
+      io.rancher.container.start_once: 'true'
+  vfb-validatekb:
+    image: matentzn/vfb-pipeline-validatekb:latest
+    environment:
+      KBpassword: neo
+      KBserver: http://vfb-kb:7474
+    stdin_open: true
+    tty: true
+    links:
+    - vfb-kb:vfb-kb
+    labels:
+      io.rancher.container.pull_image: always
+      io.rancher.container.start_once: 'true'
+  vfb-kb:
+    image: virtualflybrain/docker-neo4j-knowledgebase:neo2owl
+    environment:
+      NEO4J_AUTH: neo4j/neo
+      NEO4J_dbms_read__only: 'false'
+      NEO4J_dbms_memory_heap_maxSize: 6G
+      NEO4J_dbms_memory_heap_initial__size: 1G
+    stdin_open: true
+    tty: true
+    labels:
+      io.rancher.container.pull_image: always
+  vfb-updateprod:
+    image: matentzn/vfb-pipeline-update-prod:latest
+    environment:
+      password: neo
+      server: http://vfb-prod:7474
+      IMPORT: http://vfb-triplestore:8080/rdf4j-server/repositories/vfb?query=PREFIX+rdfs%3A+%3Chttp%3A%2F%2Fwww.w3.org%2F2000%2F01%2Frdf-schema%23%3E%0APREFIX+owl%3A+%3Chttp%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23%3E%0APREFIX+rdf%3A+%3Chttp%3A%2F%2Fwww.w3.org%2F1999%2F02%2F22-rdf-syntax-ns%23%3E%0APREFIX+obo%3A+%3Chttp%3A%2F%2Fpurl.obolibrary.org%2Fobo%2F%3E%0ACONSTRUCT+%7B%3Fx+%3Fy+%3Fz%7D%0AWHERE+%7B%0A%09%3Fx+%3Fy+%3Fz+.%0A%7D%0A
+    stdin_open: true
+    tty: true
+    links:
+    - vfb-triplestore:vfb-triplestore
+    - vfb-prod:vfb-prod
+    labels:
+      io.rancher.container.pull_image: always
+      io.rancher.container.start_once: 'true'
+  vfb-kb2kb:
+    image: matentzn/vfb-pipeline-kb2kb:latest
+    environment:
+      KBpassword: neo
+      KBserver: http://vfb-kb:7474
+    stdin_open: true
+    tty: true
+    links:
+    - vfb-kb:vfb-kb
+    labels:
+      io.rancher.container.pull_image: always
+      io.rancher.container.start_once: 'true'
+  vfb-collectdata:
+    image: matentzn/vfb-pipeline-collectdata:latest
+    environment:
+      KBpassword: neo
+      KBserver: http://vfb-kb:7474
+    stdin_open: true
+    volumes:
+    - Nico-Pipeline-vfb_data:/out
+    tty: true
+    links:
+    - vfb-kb:vfb-kb
+    labels:
+      io.rancher.container.pull_image: always
+      io.rancher.container.start_once: 'true'
+  vfb-triplestore:
+    image: yyz1989/rdf4j:latest
+    environment:
+      JVM_PARAMS: -Xms1G -Xmx5G
+      RDF4J_DATA: /data
+    stdin_open: true
+    tty: true
+    labels:
+      io.rancher.container.pull_image: always
+  vfb-prod:
+    image: matentzn/vfb-prod:latest
+    environment:
+      NEO4J_AUTH: neo4j/neo
+      NEO4J_dbms_read__only: 'false'
+      NEO4J_dbms_memory_heap_maxSize: 3G
+      NEO4J_dbms_memory_heap_initial__size: 1G
+    stdin_open: true
+    tty: true
+    labels:
+      io.rancher.container.pull_image: always
+  vfb-updatetriplestore:
+    image: matentzn/vfb-pipeline-updatetriplestore:latest
+    environment:
+      SERVER: http://vfb-triplestore:8080
+    stdin_open: true
+    volumes:
+    - Nico-Pipeline-vfb_data:/data
+    tty: true
+    links:
+    - vfb-triplestore:vfb-triplestore
+    labels:
+      io.rancher.container.pull_image: always
+      io.rancher.container.start_once: 'true'

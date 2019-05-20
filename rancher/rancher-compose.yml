@@ -1,0 +1,56 @@
+version: '2'
+services:
+  vfb-owlery:
+    scale: 1
+    start_on_create: true
+  vfb-validatekb:
+    scale: 1
+    start_on_create: true
+  vfb-kb:
+    scale: 1
+    start_on_create: true
+    health_check:
+      healthy_threshold: 2
+      response_timeout: 2000
+      port: 7474
+      unhealthy_threshold: 3
+      initializing_timeout: 60000
+      interval: 2000
+      strategy: recreate
+      reinitializing_timeout: 60000
+  vfb-updateprod:
+    scale: 1
+    start_on_create: true
+  vfb-kb2kb:
+    scale: 1
+    start_on_create: true
+  vfb-collectdata:
+    scale: 1
+    start_on_create: true
+  vfb-triplestore:
+    scale: 1
+    start_on_create: true
+    health_check:
+      response_timeout: 2000
+      healthy_threshold: 2
+      port: 8080
+      unhealthy_threshold: 3
+      initializing_timeout: 60000
+      interval: 2000
+      strategy: recreate
+      reinitializing_timeout: 60000
+  vfb-prod:
+    scale: 1
+    start_on_create: true
+    health_check:
+      response_timeout: 2000
+      healthy_threshold: 2
+      port: 7474
+      unhealthy_threshold: 3
+      initializing_timeout: 60000
+      interval: 2000
+      strategy: recreate
+      reinitializing_timeout: 60000
+  vfb-updatetriplestore:
+    scale: 1
+    start_on_create: true
