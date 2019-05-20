@@ -109,27 +109,41 @@ services:
   vfb-updateprod:
     image: matentzn/vfb-pipeline-update-prod:latest
     depends_on:
-      - vfb-updatetriplestore
-      - vfb-triplestore
+      - vfb-integration-api
       - vfb-prod
     links:
-      - vfb-triplestore
+      - vfb-integration-api
+      - vfb-prod
     environment:
       - password=neo4j/neo
       - server=http://vfb-prod:7474
-      - IMPORT=http://vfb-triplestore:8080/rdf4j-server/repositories/vfb?query=PREFIX+rdfs%3A+%3Chttp%3A%2F%2Fwww.w3.org%2F2000%2F01%2Frdf-schema%23%3E%0APREFIX+owl%3A+%3Chttp%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23%3E%0APREFIX+rdf%3A+%3Chttp%3A%2F%2Fwww.w3.org%2F1999%2F02%2F22-rdf-syntax-ns%23%3E%0APREFIX+obo%3A+%3Chttp%3A%2F%2Fpurl.obolibrary.org%2Fobo%2F%3E%0ACONSTRUCT+%7B%3Fx+%3Fy+%3Fz%7D%0AWHERE+%7B%0A%09%3Fx+%3Fy+%3Fz+.%0A%7D%0A
+      - IMPORT=http://vfb-integration-api:5000/prod
 #    networks:
 #      - dockernet
   vfb-owlery:
     image: virtualflybrain/owlery-vfb:latest
     depends_on:
+      - vfb-integration-api
+    links:
+      - vfb-integration-api
+    ports:
+      - 80:8080
+    environment:
+      - OWLURL=http://vfb-integration-api:5000/owlery
+#    networks:
+#      - dockernet
+  vfb-integration-api:
+    image: matentzn/vfb-integration-api:latest
+    depends_on:
       - vfb-updatetriplestore
       - vfb-triplestore
     links:
       - vfb-triplestore
+    ports:
+      - 5000:5000
     environment:
-      - OWLURL=http://vfb-triplestore:8080/rdf4j-server/repositories/vfb?query=PREFIX+rdfs%3A+%3Chttp%3A%2F%2Fwww.w3.org%2F2000%2F01%2Frdf-schema%23%3E%0APREFIX+owl%3A+%3Chttp%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23%3E%0APREFIX+rdf%3A+%3Chttp%3A%2F%2Fwww.w3.org%2F1999%2F02%2F22-rdf-syntax-ns%23%3E%0APREFIX+obo%3A+%3Chttp%3A%2F%2Fpurl.obolibrary.org%2Fobo%2F%3E%0ACONSTRUCT+%7B%3Fx+%3Fy+%3Fz%7D%0AWHERE+%7B%0A%09%3Fx+%3Fy+%3Fz+.%0A%7D%0A
-#    networks:
-#      - dockernet
+      - SPARQLENDPOINT=http://vfb-triplestore:8080/rdf4j-server/repositories/vfb?query=
+  #    networks:
+  #      - dockernet
 volumes:
   vfb_data:
