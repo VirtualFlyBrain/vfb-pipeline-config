@@ -3,6 +3,26 @@ version: '3.3'
 #     dockernet:
 #       external:
 #         name: dockernet
+#networks:
+#    internal:
+#        driver: bridge
+# Dependencies:
+
+# vfb-kb
+## vfb-kb2kb
+### vfb-validatekb
+#### vfb-collectdata
+
+# vfb-triplestore
+## vfb-updatetriplestore
+
+# vfb-integration-api
+# vfb-owlery
+
+# vfb-prod
+## vfb-updateprod
+
+
 services:
   vfb-kb:
     image: virtualflybrain/docker-neo4j-knowledgebase:neo2owl
@@ -22,13 +42,6 @@ services:
     ports:
       - 7474:7474
       - 7687:7687
-    #networks:
-    #  - dockernet
-    # healthcheck:
-    #   test: [ "CMD", "wget", "-O", "-", "http://localhost:7474" ]
-    #   interval: 18s
-    #   timeout: 12s
-    #   retries: 3
   vfb-triplestore:
     image: yyz1989/rdf4j:latest
     environment:
@@ -36,8 +49,6 @@ services:
       - RDF4J_DATA=/data 
     ports:
       - 8080:8080
-    #networks:
-      #- dockernet
   vfb-prod:
     image: matentzn/vfb-prod:latest
     environment:
@@ -69,7 +80,6 @@ services:
   vfb-validatekb:
     image: matentzn/vfb-pipeline-validatekb:latest
     depends_on:
-      - vfb-kb
       - vfb-kb2kb
     links:
       - vfb-kb
@@ -81,8 +91,6 @@ services:
   vfb-collectdata:
     image: matentzn/vfb-pipeline-collectdata:latest
     depends_on:
-      - vfb-kb
-      - vfb-kb2kb
       - vfb-validatekb
     links:
       - vfb-kb
