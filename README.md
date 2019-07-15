@@ -2,6 +2,9 @@
 
 VFB Pipeline 2 deploys VFB's KB, owlery and Neo4J production instances, including some intermediate nodes such as the integration layer and VFB triplestore. It can be divided into 5 general sub-pipelines, which are outline in the following.
 
+![Pipeline Overview](pipeline-overview.png)
+
+
 ## Sub-pipeline: Deploy KB (pip-kb)
 
 Summary: This pipeline loads the current KB, applies a series of transformation steps and validates the resulting version of the KB for VFB Schema compliance.
