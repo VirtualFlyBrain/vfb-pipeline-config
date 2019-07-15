@@ -79,8 +79,6 @@ Dependents: None (gepetto)
    * Image: matentzn/vfb-pipeline-update-prod:latest
    * Git: https://github.com/VirtualFlyBrain/vfb-pipeline-update-prod
    * Summary: The update-prod container currently takes an ontology (from the integration layer) and loads it into the the Neo4J instance (vfb-prod) using the neo2owl plugin.
-   * DEV: It DOES NOT ACTUALLY DO THAT YET, EDIT CONTAINER!
-
 
 # Suggestion for deployment during development phase:
 
@@ -90,4 +88,3 @@ Dependents: None (gepetto)
 1. The whole pipeline is re-run every night at 4am.
 1. Every time a sub-pipeline fails, an error report is send via email (and all its dependents shut down?)
 1. The pipeline is exposed at p2.vfb.org
-1. 
