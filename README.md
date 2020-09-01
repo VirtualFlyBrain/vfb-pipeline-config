@@ -1,6 +1,6 @@
 # Pipeline 2 Documentation
 
-VFB Pipeline 2 comprises five servers and six data pipelines:
+VFB Pipeline 2 comprises five servers/services and six data pipelines:
 
 - Pipeline 2 _servers_:
   - VFB knowledge base (vfb-kb)
@@ -29,7 +29,7 @@ Server and data pipelines are combined into 6 general sub-pipelines which are co
 - [Jenkins job](https://jenkins.virtualflybrain.org/view/pip_pipeline2/job/pip_vfb-kb/)
 - Dependents: pip-triplestore
 
-### vfb-kb
+### Service: vfb-kb
 * Image: virtualflybrain/docker-neo4j-knowledgebase:neo2owl ([dockerhub](https://hub.docker.com/repository/docker/virtualflybrain/docker-neo4j-knowledgebase/builds))
 * Git: https://github.com/VirtualFlyBrain/docker-neo4j-knowledgebase
 * [Dockerfile](https://github.com/VirtualFlyBrain/docker-neo4j-knowledgebase/blob/neo2owl/Dockerfile)
@@ -42,7 +42,7 @@ Server and data pipelines are combined into 6 general sub-pipelines which are co
 * There is nothing specifically important about vfb-kb, other than that it comes in two flavours. The pipeline spins of a KB instance which gets a tiny bit of pre-processing in vfb-collectdata (basically setting the labels correctly). This instance is spun up from backup, only for the pipeline, run, and thrown away after the pipeline is finished. It is important to note that this system means that vfb-kb _pipeline edition_ is not necessarily the exact same as vfb-kb _curation edition_ - vfb-kb _pipeline edition_ corresponds to  vfb-kb _curation edition_ at the _time of the last backup_. So, if you want them to correspond exactly, you need to make sure the backup step is run right before vfb-kb is spun up.
 * Currently the Dockerfile with the neo4j2owl plugin (and APOC!) is on a [branch](https://github.com/VirtualFlyBrain/docker-neo4j-knowledgebase/blob/neo2owl/Dockerfile)! So be careful when you merge this in!
 
-### vfb-kb2kb [provisional]
+### Data pipeline: vfb-kb2kb [provisional]
 
 * Image: virtualflybrain/vfb-pipeline-kb2kb:latest ([dockerhub](https://hub.docker.com/repository/docker/virtualflybrain/vfb-pipeline-kb2kb/builds))
 * Git: https://github.com/VirtualFlyBrain/vfb-pipeline-kb2kb
@@ -58,7 +58,7 @@ Server and data pipelines are combined into 6 general sub-pipelines which are co
 * The script _should be obsoleted_ once the migration to KB2 is completed
 
 
-### vfb-validate
+### Data pipeline: vfb-validate
 
 * Image: virtualflybrain/vfb-pipeline-validatekb:latest ([dockerhub](https://hub.docker.com/repository/docker/virtualflybrain/vfb-pipeline-validatekb/builds))
 * [Dockerfile](https://github.com/VirtualFlyBrain/vfb-pipeline-validatekb/blob/master/Dockerfile)
@@ -82,7 +82,7 @@ Server and data pipelines are combined into 6 general sub-pipelines which are co
 - Depends on: pip-kb
 - Dependents: pip-dumps
 
-### vfb-triplestore
+### Service: vfb-triplestore
 
 * Image: yyz1989/rdf4j:latest ([dockerhub](https://hub.docker.com/repository/docker/yyz1989/rdf4j/builds))
 * Git: We do not maintain this, see [ticket](https://github.com/VirtualFlyBrain/vfb-pipeline-triplestore/issues/2)
@@ -95,7 +95,7 @@ Server and data pipelines are combined into 6 general sub-pipelines which are co
  * [Repo summary](http://ts.p2.virtualflybrain.org/rdf4j-workbench/repositories/vfb/summary)
 * We should probably migrate away from this particular image of rdf4j towards our own VFB one, because there is a danger that this container gets removed/updated causing problems for us (though not likely);
 
-### vfb-collect-data
+### Data pipeline: vfb-collect-data
 
 * Image: virtualflybrain/vfb-pipeline-collectdata:latest ([dockerhub](https://hub.docker.com/repository/docker/virtualflybrain/vfb-pipeline-collectdata/builds))
 * Git: https://github.com/VirtualFlyBrain/vfb-pipeline-collectdata
@@ -120,7 +120,7 @@ Server and data pipelines are combined into 6 general sub-pipelines which are co
   1. The KB is checked using a SHACL validation engine.
   1. All ontologies ready to be imported into the triplestore are gzipped.
  
-### vfb-update-triplestore
+### Data pipeline: vfb-update-triplestore
 
 * Image: virtualflybrain/vfb-pipeline-updatetriplestore:latest ([dockerhub](https://hub.docker.com/repository/docker/virtualflybrain/vfb-pipeline-updatetriplestore/builds))
 * [Dockerfile](https://github.com/VirtualFlyBrain/vfb-pipeline-updatetriplestore/blob/master/Dockerfile)
@@ -138,7 +138,7 @@ Server and data pipelines are combined into 6 general sub-pipelines which are co
 * Depends on: pip-triplestore
 * Dependents: pip-owlery, pip-prod
 
-### vfb-dumps
+### Data pipeline: vfb-dumps
 
 * Image: virtualflybrain/vfb-pipeline-dumps:latest ([dockerhub](https://hub.docker.com/repository/docker/virtualflybrain/vfb-pipeline-dumps/builds))
 * Git: https://github.com/VirtualFlyBrain/vfb-pipeline-dumps
@@ -156,13 +156,13 @@ Server and data pipelines are combined into 6 general sub-pipelines which are co
 * There is a new section in the [config file](https://github.com/VirtualFlyBrain/vfb-prod/blob/6427bf8c41401d9978f76d601e020943536006f0/neo4j2owl-config.yaml#L159) called filters which should be pretty self explanatory. The main thing to know is that the ['iri_prefix'] [filter](https://github.com/VirtualFlyBrain/vfb-pipeline-dumps/blob/5aa5d27e89fd442b3b9635bb3e851c24590906eb/scripts/obographs-solr.py#L86) actually checks whether the listed string is contained somewhere in the IRI - so in our case, VFBc_ would have worked as well. The ['neo4j_node_label'] simply filters out every entity that also has a particular node label associated with it.
 * The vfb-solr pipeline is a bit more involved and also relies on the general pipeline [config file](https://github.com/VirtualFlyBrain/vfb-prod/blob/master/neo4j2owl-config.yaml).
 
-## Sub-pipeline: Deploy Owlery (pip_vfb-owlery)
+## Sub-pipeline: Deploy Owlery (pip_vfb-owlery, Service)
 
 * Summary: This pipeline deploys the Owlery webservice which is used by VFB to answer ontology queries (no special config).
 * Depends on: pip-integration
 * Dependents: None (gepetto)
 
-### vfb-owlery
+### Service: vfb-owlery
 
 * Image: virtualflybrain/owlery-vfb:latest ([dockerhub](https://hub.docker.com/repository/docker/virtualflybrain/owlery-vfb/builds))
 * Git: https://github.com/VirtualFlyBrain/owlery-vfb
@@ -180,7 +180,7 @@ Server and data pipelines are combined into 6 general sub-pipelines which are co
 * Dependents: None (gepetto)
 
 
-### vfb-prod
+### Service: vfb-prod
 
 * Image: virtualflybrain/vfb-prod:latest ([dockerhub](https://hub.docker.com/repository/docker/virtualflybrain/vfb-prod/builds))
 * Git: https://github.com/VirtualFlyBrain/vfb-prod
@@ -189,7 +189,7 @@ Server and data pipelines are combined into 6 general sub-pipelines which are co
 * Access: http://pdb.p2.virtualflybrain.org/browser/
 * Note that this image is used for all runtime deployments of neo4j databases across the VFB ecosystem (check branches of the vfb-prod container)
 
-### vfb-update-prod
+### Data pipeline: vfb-update-prod
 
 * Image: virtualflybrain/vfb-pipeline-update-prod:latest ([dockerhub](https://hub.docker.com/repository/docker/virtualflybrain/vfb-pipeline-update-prod/builds))
 * Git: https://github.com/VirtualFlyBrain/vfb-pipeline-update-prod
@@ -203,7 +203,7 @@ Server and data pipelines are combined into 6 general sub-pipelines which are co
 * You can set additional Pipeline postprocessing steps like indices by editing [this file](https://github.com/VirtualFlyBrain/vfb-pipeline-update-prod/blob/master/pdb_set_indices.neo4j). Note that this file can be used to set arbitrary postprocessing cypher queries, not just indices (contrary to the file name). Essentially, all list cypher queries are executed in order right after PDB import is completed.
 * The possible configuration settings for the `neo4j2owl:owl2Import()` procedure are described [here](https://github.com/VirtualFlyBrain/neo4j2owl#configuration-of-neo4j2owl). The configuration is stored [here](https://github.com/VirtualFlyBrain/vfb-prod/blob/master/neo4j2owl-config.yaml).
 
-## Sub-pipeline VFB SOLr (pip_vfb-solr)
+## Sub-pipeline VFB SOLr (pip_vfb-solr, Service)
 
 * Image: virtualflybrain/vfb-solr ([dockerhub](https://hub.docker.com/r/virtualflybrain/vfb-solr))
 * Git: https://github.com/VirtualFlyBrain/vfb-solr
