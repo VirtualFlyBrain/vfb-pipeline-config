@@ -18,8 +18,7 @@ VFB Pipeline 2 comprises five servers and five data pipelines:
 
 Server and data pipelines are combined into 6 general sub-pipelines which are configured as Jenkins jobs (currently located [here](https://jenkins.virtualflybrain.org/view/pip_pipeline2/)). This documentation describes all 6 sub-pipelines in detail, including which role the individual servers and data pipelines play. All high-level documentation including images can be found on the [vfb-pipeline-config repo](https://github.com/VirtualFlyBrain/vfb-pipeline-config). Note: There was once a pipeline server named `vfb-integration-api` which has since been discarded in favour of `vfb-dumps`.
 
-<!--![Pipeline Overview](pipeline-overview.png)-->
-
+![Pipeline Overview](pipeline-overview.png)
 
 ## Sub-pipeline: Deploy KB (pip_vfb-kb)
 
