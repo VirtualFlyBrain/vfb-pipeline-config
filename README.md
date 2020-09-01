@@ -22,20 +22,20 @@ Server and data pipelines are combined into 6 general sub-pipelines which are co
 
 ## Sub-pipeline: Deploy KB (pip_vfb-kb)
 
-- *Summary*: This pipeline loads the current KB from backup, applies a series of transformation steps and validates the resulting version of the KB for VFB Schema compliance. The finalised KB is backed up, and spun up, again from backup to clear caches. Components:
+- _Summary_: This pipeline loads the current KB from backup, applies a series of transformation steps and validates the resulting version of the KB for VFB Schema compliance. The finalised KB is backed up, and spun up, again from backup to clear caches. Components:
   - `vfb-kb` (deployment of the VFB knowledge base)
   - `vfb-kb2kb` (provisional data pipeline managing the migration from KB1 to KB2)
   - `vfb-validate` (validation pipeline to check if KB2 is in the correct basic shape for neo4j2owl)
 - [Jenkins job](https://jenkins.virtualflybrain.org/view/pip_pipeline2/job/pip_vfb-kb/)
-- *Dependents*: pip-triplestore
+- _Dependents_: pip-triplestore
 
 ### Service: vfb-kb
-- *Image*: virtualflybrain/docker-neo4j-knowledgebase:neo2owl ([dockerhub](https://hub.docker.com/repository/docker/virtualflybrain/docker-neo4j-knowledgebase/builds))
-- *Git*: https://github.com/VirtualFlyBrain/docker-neo4j-knowledgebase
+- _Image_: virtualflybrain/docker-neo4j-knowledgebase:neo2owl ([dockerhub](https://hub.docker.com/repository/docker/virtualflybrain/docker-neo4j-knowledgebase/builds))
+- _Git_: https://github.com/VirtualFlyBrain/docker-neo4j-knowledgebase
 - [Dockerfile](https://github.com/VirtualFlyBrain/docker-neo4j-knowledgebase/blob/neo2owl/Dockerfile)
 - [Jenkins job](https://jenkins.virtualflybrain.org/view/pip_pipeline2/job/pip_vfb-kb)
-- *Summary*: The VFB KB instance loads the [VFB KB Archive](http://data.virtualflybrain.org/archive/VFB-KB.tar.gz) and deploys it as a Neo4J instance that includes the [neo2owl plugin](https://github.com/VirtualFlyBrain/neo4j2owl). This plugin allows loading OWL ontologies into Neo4J according to a [specific schema](https://github.com/VirtualFlyBrain/neo4j2owl/blob/master/README.md), as well as serialising the (valid) Neo4J graph into OWL.
-- *Access*: http://kbl.p2.virtualflybrain.org/browser/ (post pipeline), http://kb.p2.virtualflybrain.org/browser/ (spin off from backup)
+- _Summary_: The VFB KB instance loads the [VFB KB Archive](http://data.virtualflybrain.org/archive/VFB-KB.tar.gz) and deploys it as a Neo4J instance that includes the [neo2owl plugin](https://github.com/VirtualFlyBrain/neo4j2owl). This plugin allows loading OWL ontologies into Neo4J according to a [specific schema](https://github.com/VirtualFlyBrain/neo4j2owl/blob/master/README.md), as well as serialising the (valid) Neo4J graph into OWL.
+- _Access_: http://kbl.p2.virtualflybrain.org/browser/ (post pipeline), http://kb.p2.virtualflybrain.org/browser/ (spin off from backup)
 
 #### Detailed notes on vfb-kb
 
@@ -44,11 +44,11 @@ Server and data pipelines are combined into 6 general sub-pipelines which are co
 
 ### Data pipeline: vfb-kb2kb [provisional]
 
-- *Image*: virtualflybrain/vfb-pipeline-kb2kb:latest ([dockerhub](https://hub.docker.com/repository/docker/virtualflybrain/vfb-pipeline-kb2kb/builds))
-- *Git*: https://github.com/VirtualFlyBrain/vfb-pipeline-kb2kb
+- _Image_: virtualflybrain/vfb-pipeline-kb2kb:latest ([dockerhub](https://hub.docker.com/repository/docker/virtualflybrain/vfb-pipeline-kb2kb/builds))
+- _Git_: https://github.com/VirtualFlyBrain/vfb-pipeline-kb2kb
 - [Dockerfile](https://github.com/VirtualFlyBrain/vfb-pipeline-kb2kb/blob/master/Dockerfile)
 - [Jenkins job](https://jenkins.virtualflybrain.org/view/pip_pipeline2/job/pip_vfb-kb)
-- *Summary*: The image encapsulates a (python/cypher-based) pipeline to transform the original version of the KB into a [schema-compliant](https://github.com/VirtualFlyBrain/neo4j2owl/blob/master/README.md) version.
+- _Summary_: The image encapsulates a (python/cypher-based) pipeline to transform the original version of the KB into a [schema-compliant](https://github.com/VirtualFlyBrain/neo4j2owl/blob/master/README.md) version.
  
 
 #### Detailed notes on vfb-kb2kb
@@ -60,11 +60,11 @@ Server and data pipelines are combined into 6 general sub-pipelines which are co
 
 ### Data pipeline: vfb-validate
 
-- *Image*: virtualflybrain/vfb-pipeline-validatekb:latest ([dockerhub](https://hub.docker.com/repository/docker/virtualflybrain/vfb-pipeline-validatekb/builds))
+- _Image_: virtualflybrain/vfb-pipeline-validatekb:latest ([dockerhub](https://hub.docker.com/repository/docker/virtualflybrain/vfb-pipeline-validatekb/builds))
 - [Dockerfile](https://github.com/VirtualFlyBrain/vfb-pipeline-validatekb/blob/master/Dockerfile)
-- *Git*: https://github.com/VirtualFlyBrain/vfb-pipeline-validatekb
+- _Git_: https://github.com/VirtualFlyBrain/vfb-pipeline-validatekb
 - [Jenkins job](https://jenkins.virtualflybrain.org/view/pip_pipeline2/job/pip_vfb-kb)
-- *Summary*: The image encapsulates a (python/cypher-based) pipeline to check whether the current state of the KB is [schema-compliant](https://github.com/VirtualFlyBrain/neo4j2owl/blob/master/README.md).
+- _Summary_: The image encapsulates a (python/cypher-based) pipeline to check whether the current state of the KB is [schema-compliant](https://github.com/VirtualFlyBrain/neo4j2owl/blob/master/README.md).
 - Results of the validation can be read on the latest console output of the Jenkins `pip_vfb-kb` pipeline.
 
 #### Detailed notes on vfb-validate
@@ -74,33 +74,33 @@ Server and data pipelines are combined into 6 general sub-pipelines which are co
 
 ## Sub-pipeline: Deploy triplestore (pip_vfb-triplestore)
 
-- *Summary*: This pipeline deploys an empty triplestore, collects all VFB relevant data (including KB and ontologies), and pre-processes and loads the collected data into the triplestore. Components:
+- _Summary_: This pipeline deploys an empty triplestore, collects all VFB relevant data (including KB and ontologies), and pre-processes and loads the collected data into the triplestore. Components:
   - `vfb-triplestore` (deploying triplestore)
   - `vfb-collect-data` (data collection and preprocessing pipeline for all VFB data)
   - `vfb-update-triplestore` (loading collected data into the triplestore)
 - [Jenkins job](https://jenkins.virtualflybrain.org/view/pip_pipeline2/job/pip_vfb-triplestore/)
-- *Depends on*: `pip-kb`
-- *Dependents*: `pip-dumps`
+- _Depends on_: `pip-kb`
+- _Dependents_: `pip-dumps`
 
 ### Service: vfb-triplestore
 
-- *Image*: yyz1989/rdf4j:latest ([dockerhub](https://hub.docker.com/repository/docker/yyz1989/rdf4j/builds))
-- *Git*: We do not maintain this, see [ticket](https://github.com/VirtualFlyBrain/vfb-pipeline-triplestore/issues/2)
-- *Summary*: The triplestore is currently an unspectacular default implementation of rdf4j-server. We make use of a simple in-memory store that is configured [here](https://github.com/VirtualFlyBrain/vfb-pipeline-triplestore/blob/master/rdf4j_vfb.txt). The container is maintained elsewhere (see docker-hub pages of image for details).
+- _Image_: yyz1989/rdf4j:latest ([dockerhub](https://hub.docker.com/repository/docker/yyz1989/rdf4j/builds))
+- _Git_: We do not maintain this, see [ticket](https://github.com/VirtualFlyBrain/vfb-pipeline-triplestore/issues/2)
+- _Summary_: The triplestore is currently an unspectacular default implementation of rdf4j-server. We make use of a simple in-memory store that is configured [here](https://github.com/VirtualFlyBrain/vfb-pipeline-triplestore/blob/master/rdf4j_vfb.txt). The container is maintained elsewhere (see docker-hub pages of image for details).
 
 #### Detailed notes on vfb-triplestore
 
-- *Triplestore access*:
+- _Triplestore access_:
   - [Example](http://ts.p2.virtualflybrain.org/rdf4j-workbench/repositories/vfb/query?action=exec&queryLn=SPARQL&query=PREFIX%20%3A%20%3Chttp%3A%2F%2Fwww.test.com%2Fns%2Ftest2%23%3E%0A%0ACONSTRUCT%20%7B%20%3Fx%20%3Fp%20%3Fy%20.%20%7D%0A%0AWHERE%20%7B%3Fx%20%3Fp%20%3Fy%20.%7D%0ALIMIT%2010&limit_query=100&infer=true&) SPARQL query agains UI
   - [Repo summary](http://ts.p2.virtualflybrain.org/rdf4j-workbench/repositories/vfb/summary)
 - We should probably migrate away from this particular image of rdf4j towards our own VFB one, because there is a danger that this container gets removed/updated causing problems for us (though not likely);
 
 ### Data pipeline: vfb-collect-data
 
-- *Image*: virtualflybrain/vfb-pipeline-collectdata:latest ([dockerhub](https://hub.docker.com/repository/docker/virtualflybrain/vfb-pipeline-collectdata/builds))
-- *Git*: https://github.com/VirtualFlyBrain/vfb-pipeline-collectdata
+- _Image_: virtualflybrain/vfb-pipeline-collectdata:latest ([dockerhub](https://hub.docker.com/repository/docker/virtualflybrain/vfb-pipeline-collectdata/builds))
+- _Git_: https://github.com/VirtualFlyBrain/vfb-pipeline-collectdata
 - [Dockerfile](https://github.com/VirtualFlyBrain/vfb-pipeline-collectdata/blob/master/Dockerfile)
-- *Summary*: This container encapsulates a process that downloads a number of source ontologies, obtains the OWL version of the VFB KB, and applies a number of ROBOT-based pre-processing steps, in particular: extracting modules/slices of external ontologies, running consistency checks and serialising as ttl for quicker ingest into triplestore. It also contains the _data embargo_ pipeline and has some provisions for _shacl validation_.
+- _Summary_: This container encapsulates a process that downloads a number of source ontologies, obtains the OWL version of the VFB KB, and applies a number of ROBOT-based pre-processing steps, in particular: extracting modules/slices of external ontologies, running consistency checks and serialising as ttl for quicker ingest into triplestore. It also contains the _data embargo_ pipeline and has some provisions for _shacl validation_.
 
 #### neo4j2owl:exportOWL()
 
@@ -122,10 +122,10 @@ Server and data pipelines are combined into 6 general sub-pipelines which are co
  
 ### Data pipeline: vfb-update-triplestore
 
-- *Image*: virtualflybrain/vfb-pipeline-updatetriplestore:latest ([dockerhub](https://hub.docker.com/repository/docker/virtualflybrain/vfb-pipeline-updatetriplestore/builds))
+- _Image_: virtualflybrain/vfb-pipeline-updatetriplestore:latest ([dockerhub](https://hub.docker.com/repository/docker/virtualflybrain/vfb-pipeline-updatetriplestore/builds))
 - [Dockerfile](https://github.com/VirtualFlyBrain/vfb-pipeline-updatetriplestore/blob/master/Dockerfile)
-- *Git*: https://github.com/VirtualFlyBrain/vfb-pipeline-updatetriplestore
-- *Summary*: This container encapsulates a process that (1) sets up the triplestores vfb database and (2) loads all of the ttl files generated by vfb-collect-data into the vfb-triplestore. The image contains the configuration details of triplestore, like choice of triplestore engine.
+- _Git_: https://github.com/VirtualFlyBrain/vfb-pipeline-updatetriplestore
+- _Summary_: This container encapsulates a process that (1) sets up the triplestores vfb database and (2) loads all of the ttl files generated by vfb-collect-data into the vfb-triplestore. The image contains the configuration details of triplestore, like choice of triplestore engine.
 
 #### Detailed notes on vfb-update-triplestore:
 
@@ -133,19 +133,18 @@ Server and data pipelines are combined into 6 general sub-pipelines which are co
 
 ## Sub-pipeline: Data transformation and dumps for production instances (pip_vfb-pipeline-dumps)
 
-- *Summary*: This pipeline transforms the knowledge graph in the triplestore into various custom dumps used by downstream services such as the VFB Neo4J production instance, owlery and solr.
+- _Summary_: This pipeline transforms the knowledge graph in the triplestore into various custom dumps used by downstream services such as the VFB Neo4J production instance, owlery and solr.
 - [Jenkins pipeline](https://jenkins.virtualflybrain.org/view/pip_pipeline2/job/pip_vfb-pipeline-dumps/)
-- *Depends on*: pip-triplestore
-- *Dependents*: pip-owlery, pip-prod
+- _Depends on_: pip-triplestore
+- _Dependents_: pip-owlery, pip-prod
 
 ### Data pipeline: vfb-dumps
 
-- *Image*: virtualflybrain/vfb-pipeline-dumps:latest ([dockerhub](https://hub.docker.com/repository/docker/virtualflybrain/vfb-pipeline-dumps/builds))
-- *Git*: https://github.com/VirtualFlyBrain/vfb-pipeline-dumps
-- *Summary*: The VFB dumps pipeline access the triple store to obtain data dumps that in mungs, transforms and enriches for various downstream purposes such as vfb-prod ingestion, owlery ingestion and vfb-solr ingestion.
+- _Image_: virtualflybrain/vfb-pipeline-dumps:latest ([dockerhub](https://hub.docker.com/repository/docker/virtualflybrain/vfb-pipeline-dumps/builds))
+- _Git_: https://github.com/VirtualFlyBrain/vfb-pipeline-dumps
+- _Summary_: The VFB dumps pipeline access the triple store to obtain data dumps that in mungs, transforms and enriches for various downstream purposes such as vfb-prod ingestion, owlery ingestion and vfb-solr ingestion.
 - [Dockerfile](https://github.com/VirtualFlyBrain/vfb-pipeline-dumps/blob/master/Dockerfile)
-- *Example access*:
- * http://virtualflybrain.org/data/VFB/OWL contains all the data that is generated by this pipeline. This generated is loaded into the various downstream tools.
+- _Example access_: http://virtualflybrain.org/data/VFB/OWL contains all the data that is generated by this pipeline. This generated is loaded into the various downstream tools.
 
 #### Detailed notes on vfb-dumps
 
@@ -158,43 +157,42 @@ Server and data pipelines are combined into 6 general sub-pipelines which are co
 
 ## Sub-pipeline: Deploy Owlery (pip_vfb-owlery, Service)
 
-- *Summary*: This pipeline deploys the Owlery webservice which is used by VFB to answer ontology queries (no special config).
-- *Depends on*: `vfb-dumps`
-- *Dependents*: None (gepetto)
+- _Summary_: This pipeline deploys the Owlery webservice which is used by VFB to answer ontology queries (no special config).
+- _Depends on_: `vfb-dumps`
+- _Dependents_: None (gepetto)
 
 ### Service: vfb-owlery
 
-- *Image*: virtualflybrain/owlery-vfb:latest ([dockerhub](https://hub.docker.com/repository/docker/virtualflybrain/owlery-vfb/builds))
-- *Git*: https://github.com/VirtualFlyBrain/owlery-vfb
+- _Image_: virtualflybrain/owlery-vfb:latest ([dockerhub](https://hub.docker.com/repository/docker/virtualflybrain/owlery-vfb/builds))
+- _Git_: https://github.com/VirtualFlyBrain/owlery-vfb
 - [Dockerfile](https://github.com/VirtualFlyBrain/owlery-vfb/blob/master/Dockerfile)
-- *Summary*: Deployment of [Owlery](https://owlery.docs.apiary.io/#), a web-service for accessing basic reasoning methods of an ontology. 
-- *Example access*:
- * Get [subclasses](http://owl.ps2.virtualflybrain.org/kbs/vfb/superclasses?object=%3Chttp://purl.obolibrary.org/obo/FBbt_00005774%3E&direct=true) of a term
+- _Summary_: Deployment of [Owlery](https://owlery.docs.apiary.io/#), a web-service for accessing basic reasoning methods of an ontology. 
+- _Example access_: Get [subclasses](http://owl.ps2.virtualflybrain.org/kbs/vfb/superclasses?object=%3Chttp://purl.obolibrary.org/obo/FBbt_00005774%3E&direct=true) of a term
 
 
 ## Sub-pipeline: VFB prod (pip_vfb-prod)
 
-- *Summary*: This pipeline deploys the production instance of the VFB neo4j database and loads all the relevant data.
-- *Depends on*: pip-integratio
+- _Summary_: This pipeline deploys the production instance of the VFB neo4j database and loads all the relevant data.
+- _Depends on_: pip-integratio
 - [Jenkins pipeline](https://jenkins.virtualflybrain.org/view/pip_pipeline2/job/pip_vfb-prod/)
-- *Dependents*: None (gepetto)
+- _Dependents_: None (gepetto)
 
 
 ### Service: vfb-prod
 
-- *Image*: virtualflybrain/vfb-prod:latest ([dockerhub](https://hub.docker.com/repository/docker/virtualflybrain/vfb-prod/builds))
-- *Git*: https://github.com/VirtualFlyBrain/vfb-prod
+- _Image_: virtualflybrain/vfb-prod:latest ([dockerhub](https://hub.docker.com/repository/docker/virtualflybrain/vfb-prod/builds))
+- _Git_: https://github.com/VirtualFlyBrain/vfb-prod
 - [Dockerfile](https://github.com/VirtualFlyBrain/vfb-prod/blob/master/Dockerfile)
-- *Summary*: Deploys an empty, configured instance of a Neo4J database with the [neo2owl plugin](https://github.com/VirtualFlyBrain/neo4j2owl), and APOC tools.
-- *Access*: http://pdb.p2.virtualflybrain.org/browser/
+- _Summary_: Deploys an empty, configured instance of a Neo4J database with the [neo2owl plugin](https://github.com/VirtualFlyBrain/neo4j2owl), and APOC tools.
+- _Access_: http://pdb.p2.virtualflybrain.org/browser/
 - Note that this image is _used for all runtime deployments of neo4j databases_ across the VFB ecosystem (check branches of the vfb-prod container)
 
 ### Data pipeline: vfb-update-prod
 
-- *Image*: virtualflybrain/vfb-pipeline-update-prod:latest ([dockerhub](https://hub.docker.com/repository/docker/virtualflybrain/vfb-pipeline-update-prod/builds))
-- *Git*: https://github.com/VirtualFlyBrain/vfb-pipeline-update-prod
+- _Image_: virtualflybrain/vfb-pipeline-update-prod:latest ([dockerhub](https://hub.docker.com/repository/docker/virtualflybrain/vfb-pipeline-update-prod/builds))
+- _Git_: https://github.com/VirtualFlyBrain/vfb-pipeline-update-prod
 - [Dockerfile](https://github.com/VirtualFlyBrain/vfb-pipeline-update-prod/blob/master/Dockerfile)
-- *Summary*: The update-prod container currently takes an ontology (from the integration layer) and loads it into the the Neo4J instance (vfb-prod) using the neo2owl plugin. Process"
+- _Summary_: The update-prod container currently takes an ontology (from the integration layer) and loads it into the the Neo4J instance (vfb-prod) using the neo2owl plugin. Process"
   1. Loading the ontology using the `neo4j2owl:owl2Import()` procedure
   1. Setting a number of indices (see detailed notes below). 
 
@@ -205,10 +203,10 @@ Server and data pipelines are combined into 6 general sub-pipelines which are co
 
 ## Sub-pipeline VFB SOLr (pip_vfb-solr, Service)
 
-- *Image*: virtualflybrain/vfb-solr ([dockerhub](https://hub.docker.com/r/virtualflybrain/vfb-solr))
-- *Git*: https://github.com/VirtualFlyBrain/vfb-solr
+- _Image_: virtualflybrain/vfb-solr ([dockerhub](https://hub.docker.com/r/virtualflybrain/vfb-solr))
+- _Git_: https://github.com/VirtualFlyBrain/vfb-solr
 - [Dockerfile](https://github.com/VirtualFlyBrain/vfb-solr/blob/master/Dockerfile)
-- *Summary*: an essentially unchanged solr 8 image instance
+- _Summary_: an essentially unchanged solr 8 image instance
 - [Jenkins pipeline](https://jenkins.virtualflybrain.org/view/pip_pipeline2/job/pip_vfb-solr/)
 
 # Deployment during development phase:
