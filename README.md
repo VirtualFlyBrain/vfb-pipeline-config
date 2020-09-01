@@ -1,6 +1,6 @@
 # Pipeline 2 Documentation
 
-VFB Pipeline 2 comprises five servers and five data pipelines:
+VFB Pipeline 2 comprises five servers and six data pipelines:
 
 - Pipeline 2 _servers_:
   - VFB knowledge base (vfb-kb)
@@ -9,7 +9,7 @@ VFB Pipeline 2 comprises five servers and five data pipelines:
   - owlery (vfb-owlery)
   - VFB Neo4J production instance (vfb-prod)
 - Pipeline 2 _data pipelines_:
-  - Transform KB1 to KB2 (vfb-kb2kb)
+  - Transform KB1 to KB2 (vfb-kb2kb) [to be obsoleted]
   - Validate KB (vfb-validate)
   - Data collection (vfb-collect-data) 
   - Triple store ingestion (vfb-updatetriplestore)
