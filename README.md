@@ -154,6 +154,10 @@ Server and data pipelines are combined into 6 general sub-pipelines which are co
   1. Build dump for `vfb-solr` (special json file, created using python)
 - There is a new section in the [config file](https://github.com/VirtualFlyBrain/vfb-prod/blob/6427bf8c41401d9978f76d601e020943536006f0/neo4j2owl-config.yaml#L159) called filters which should be pretty self explanatory. The main thing to know is that the ['iri_prefix'] [filter](https://github.com/VirtualFlyBrain/vfb-pipeline-dumps/blob/5aa5d27e89fd442b3b9635bb3e851c24590906eb/scripts/obographs-solr.py#L86) actually checks whether the listed string is contained somewhere in the IRI - so in our case, VFBc_ would have worked as well. The ['neo4j_node_label'] simply filters out every entity that also has a particular node label associated with it.
 - The vfb-solr pipeline is a bit more involved and also relies on the general pipeline [config file](https://github.com/VirtualFlyBrain/vfb-prod/blob/master/neo4j2owl-config.yaml).
+- There is a new section in the dumps.Makefile (around line 66) that allows adding arbitrary sparql construct queries to the produced dumps. This can be useful, for example, to materialise ad hoc neo labels. Add a new dump:
+  1. pick name, add to the correct DUMPS variable (DUMPS_SOLR, DUMPS_PDB, DUMPS_OWLERY)
+  2. create new sparql query in sparql/, naming it 'construct_name.sparql', e.g. sparql/construct_image_names.sparql
+  Note that non-sparql goals, like 'inferred_annotation', need to be added separately.
 
 ## Sub-pipeline: Deploy Owlery (pip_vfb-owlery, Service)
 
