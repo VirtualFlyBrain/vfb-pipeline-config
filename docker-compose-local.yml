@@ -58,7 +58,7 @@ services:
         reservations:
           memory: 1G
   vfb-triplestore:
-    image: yyz1989/rdf4j:latest
+    image: matentzn/vfb-pipeline-triplestore
     environment:
       - JVM_PARAMS=-Xms1G -Xmx5G
       - RDF4J_DATA=/data
