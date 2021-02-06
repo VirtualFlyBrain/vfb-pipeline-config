@@ -29,7 +29,7 @@ services:
     # image: virtualflybrain/docker-vfb-neo4j:enterprise
     image: virtualflybrain/vfb-prod:kb
     build:
-      context: docker-neo4j-knowledgebase
+      context: ../docker-neo4j-knowledgebase
       dockerfile: Dockerfile
       args:
         - CONF_REPO=${CONF_REPO}
@@ -58,7 +58,7 @@ services:
         reservations:
           memory: 1G
   vfb-triplestore:
-    image: yyz1989/rdf4j:latest
+    image: matentzn/vfb-pipeline-triplestore
     environment:
       - JVM_PARAMS=-Xms1G -Xmx5G
       - RDF4J_DATA=/data
@@ -67,7 +67,7 @@ services:
   vfb-prod:
     image: matentzn/vfb-prod:latest
     build:
-      context: vfb-prod
+      context: ../vfb-prod
       dockerfile: Dockerfile
     environment:
       - NEO4J_AUTH=neo4j/neo
@@ -98,7 +98,7 @@ services:
   vfb-validatekb:
     image: matentzn/vfb-pipeline-validatekb:latest
     build:
-      context: vfb-pipeline-validatekb
+      context: ../vfb-pipeline-validatekb
       dockerfile: Dockerfile
       args:
         - CONF_REPO=${CONF_REPO}
@@ -115,7 +115,7 @@ services:
   vfb-collectdata:
     image: matentzn/vfb-pipeline-collectdata:latest
     build:
-      context: vfb-pipeline-collectdata
+      context: ../vfb-pipeline-collectdata
       dockerfile: Dockerfile
       args:
         - CONF_REPO=${CONF_REPO}
@@ -134,7 +134,7 @@ services:
   vfb-updatetriplestore:
     image: matentzn/vfb-pipeline-updatetriplestore:latest
     build:
-      context: vfb-pipeline-updatetriplestore
+      context: ../vfb-pipeline-updatetriplestore
       dockerfile: Dockerfile
       args:
         - CONF_REPO=${CONF_REPO}
@@ -153,7 +153,7 @@ services:
   vfb-updateprod:
     image: matentzn/vfb-pipeline-update-prod:latest
     build:
-      context: vfb-pipeline-update-prod
+      context: ../vfb-pipeline-update-prod
       dockerfile: Dockerfile
       args:
         - CONF_REPO=${CONF_REPO}
@@ -172,7 +172,7 @@ services:
   vfb-owlery:
     image: phenoscape/owlery
     build:
-      context: owlery-vfb
+      context: ../owlery-vfb
       dockerfile: Dockerfile
       args:
         - CONF_REPO=${CONF_REPO}
@@ -188,7 +188,7 @@ services:
   vfb-dumps:
     image: matentzn/vfb-pipeline-dumps:latest
     build:
-      context: vfb-pipeline-dumps
+      context: ../vfb-pipeline-dumps
       dockerfile: Dockerfile
       args:
         - CONF_REPO=${CONF_REPO}
