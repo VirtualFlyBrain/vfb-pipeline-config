@@ -44,13 +44,15 @@ services:
     #     condition: on-failure
     environment:
       - NEO4J_AUTH=neo4j/neo
-      - NEO4J_dbms_read__only=true
+      - NEO4J_dbms_read__only=false
       - NEO4J_dbms_memory_heap_maxSize=15G
       - NEO4J_dbms_memory_heap_initial__size=1G
       #- NEO4J_dbms_memory_pagecache_size=20G
     ports:
       - 7474:7474
       - 7687:7687
+    volumes:
+      - vfb_data:/data_transfer
     deploy:
       resources:
         limits:
@@ -77,6 +79,8 @@ services:
     ports:
       - 7473:7474
       - 7686:7687
+    volumes:
+      - vfb_data:/input
     # networks:
     #   - dockernet
     healthcheck:
@@ -167,6 +171,8 @@ services:
     environment:
       - password=neo4j/neo
       - server=http://vfb-prod:7474
+    volumes:
+      - vfb_data:/input
 #    networks:
 #      - dockernet
   vfb-owlery:
