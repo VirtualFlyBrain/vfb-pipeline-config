@@ -5,7 +5,7 @@ CONSTRUCT { ?x ?p ?y . }
 
 WHERE {
 	?x ?p ?y .
-	FILTER(!isLiteral(?y)) 	
+	FILTER(!isLiteral(?y))
 }
 
 # LIMIT 5000
