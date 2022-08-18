@@ -27,7 +27,7 @@ services:
   vfb-kb:
     # image: virtualflybrain/docker-neo4j-knowledgebase:neo2owl
     # image: virtualflybrain/docker-vfb-neo4j:enterprise
-    image: virtualflybrain/vfb-prod:kb
+    image: virtualflybrain/vfb-prod:kb-v4-2
     build:
       context: ../docker-neo4j-knowledgebase
       dockerfile: Dockerfile
@@ -43,7 +43,7 @@ services:
     #   restart_policy:
     #     condition: on-failure
     environment:
-      - NEO4J_AUTH=neo4j/neo
+      - NEO4J_AUTH=neo4j/vfb
       - NEO4J_dbms_read__only=false
       - NEO4J_dbms_memory_heap_maxSize=15G
       - NEO4J_dbms_memory_heap_initial__size=1G
@@ -72,7 +72,7 @@ services:
       context: ../vfb-prod
       dockerfile: Dockerfile
     environment:
-      - NEO4J_AUTH=neo4j/neo
+      - NEO4J_AUTH=neo4j/vfb
       - NEO4J_dbms_read__only=false
       - NEO4J_dbms_memory_heap_maxSize=3G
       - NEO4J_dbms_memory_heap_initial__size=1G
@@ -112,7 +112,7 @@ services:
     links:
       - vfb-kb
     environment:
-      - KBpassword=neo4j/neo
+      - KBpassword=neo4j/vfb
       - KBserver=http://vfb-kb:7474
 #    networks:
 #      - dockernet
@@ -131,6 +131,7 @@ services:
       - vfb-kb
     environment:
       - KBserver=http://vfb-kb:7474
+      - KBpassword=vfb
     volumes:
       - vfb_data:/out
 #    networks:
